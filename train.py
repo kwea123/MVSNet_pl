@@ -27,10 +27,11 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning import Trainer
 from pytorch_lightning.logging import TestTubeLogger
 
+torch.backends.cudnn.benchmark = True # this increases training speed by 5x
+
 class MVSSystem(pl.LightningModule):
     def __init__(self, hparams):
         super(MVSSystem, self).__init__()
-
         self.hparams = hparams
         # # to unnormalize image for visualization
         # self.unpreprocess = T.Normalize(mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225], 
@@ -50,8 +51,8 @@ class MVSSystem(pl.LightningModule):
             if batch_nb == 0:
                 img_ = imgs[0, 0, :, ::4, ::4].cpu() # batch 0, ref image, 1/4 scale
                 depth_gt_ = visualize_depth(depth_gt[0])
-                depth_pred_ = visualize_depth(depth_pred[0])
-                prob = visualize_prob(photometric_confidence[0])
+                depth_pred_ = visualize_depth(depth_pred[0]*mask[0])
+                prob = visualize_prob(photometric_confidence[0]*mask[0])
                 stack = torch.stack([img_, depth_gt_, depth_pred_, prob]) # (4, 3, H, W)
                 self.logger.experiment.add_images('train/image_GT_pred_prob',
                                                   stack, self.global_step)
@@ -80,8 +81,8 @@ class MVSSystem(pl.LightningModule):
             if batch_nb == 0:
                 img_ = imgs[0, 0, :, ::4, ::4].cpu() # batch 0, ref image, 1/4 scale
                 depth_gt_ = visualize_depth(depth_gt[0])
-                depth_pred_ = visualize_depth(depth_pred[0])
-                prob = visualize_prob(photometric_confidence[0])
+                depth_pred_ = visualize_depth(depth_pred[0]*mask[0])
+                prob = visualize_prob(photometric_confidence[0]*mask[0])
                 stack = torch.stack([img_, depth_gt_, depth_pred_, prob]) # (4, 3, H, W)
                 self.logger.experiment.add_images('val/image_GT_pred_prob',
                                                   stack, self.global_step)
