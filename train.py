@@ -142,16 +142,16 @@ class MVSSystem(pl.LightningModule):
 
     @pl.data_loader
     def train_dataloader(self):
-        self.train_dataset = DTUDataset(root_dir=hparams.root_dir,
-                                        split='train',
-                                        n_views=hparams.n_views,
-                                        n_depths=hparams.n_depths,
-                                        interval_scale=hparams.interval_scale)
+        train_dataset = DTUDataset(root_dir=self.hparams.root_dir,
+                                   split='train',
+                                   n_views=self.hparams.n_views,
+                                   n_depths=self.hparams.n_depths,
+                                   interval_scale=self.hparams.interval_scale)
         if self.hparams.num_gpus > 1:
-            sampler = DistributedSampler(self.train_dataset)
+            sampler = DistributedSampler(train_dataset)
         else:
             sampler = None
-        return DataLoader(self.train_dataset, 
+        return DataLoader(train_dataset, 
                           shuffle=(sampler is None),
                           sampler=sampler,
                           num_workers=8,
@@ -160,16 +160,16 @@ class MVSSystem(pl.LightningModule):
 
     @pl.data_loader
     def val_dataloader(self):
-        self.val_dataset = DTUDataset(root_dir=hparams.root_dir,
-                                      split='val',
-                                      n_views=hparams.n_views,
-                                      n_depths=hparams.n_depths,
-                                      interval_scale=hparams.interval_scale)
+        val_dataset = DTUDataset(root_dir=self.hparams.root_dir,
+                                 split='val',
+                                 n_views=self.hparams.n_views,
+                                 n_depths=self.hparams.n_depths,
+                                 interval_scale=self.hparams.interval_scale)
         if self.hparams.num_gpus > 1:
-            sampler = DistributedSampler(self.train_dataset)
+            sampler = DistributedSampler(val_dataset)
         else:
             sampler = None
-        return DataLoader(self.val_dataset, 
+        return DataLoader(val_dataset, 
                           shuffle=(sampler is None),
                           sampler=sampler,
                           num_workers=8,
