@@ -36,17 +36,6 @@ class MVSSystem(pl.LightningModule):
         # self.unpreprocess = T.Normalize(mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225], 
         #                                 std=[1/0.229, 1/0.224, 1/0.225])
 
-        self.train_dataset = DTUDataset(root_dir=hparams.root_dir,
-                                        split='train',
-                                        n_views=hparams.n_views,
-                                        n_depths=hparams.n_depths,
-                                        interval_scale=hparams.interval_scale)
-        self.val_dataset = DTUDataset(root_dir=hparams.root_dir,
-                                      split='val',
-                                      n_views=hparams.n_views,
-                                      n_depths=hparams.n_depths,
-                                      interval_scale=hparams.interval_scale)
-
         self.loss = loss_dict[hparams.loss_type](ohem=True, topk=0.6)
 
     def forward(self, imgs, proj_mats, depth_values):
@@ -153,6 +142,11 @@ class MVSSystem(pl.LightningModule):
 
     @pl.data_loader
     def train_dataloader(self):
+        self.train_dataset = DTUDataset(root_dir=hparams.root_dir,
+                                        split='train',
+                                        n_views=hparams.n_views,
+                                        n_depths=hparams.n_depths,
+                                        interval_scale=hparams.interval_scale)
         if self.hparams.num_gpus > 1:
             sampler = DistributedSampler(self.train_dataset)
         else:
@@ -166,6 +160,11 @@ class MVSSystem(pl.LightningModule):
 
     @pl.data_loader
     def val_dataloader(self):
+        self.val_dataset = DTUDataset(root_dir=hparams.root_dir,
+                                      split='val',
+                                      n_views=hparams.n_views,
+                                      n_depths=hparams.n_depths,
+                                      interval_scale=hparams.interval_scale)
         if self.hparams.num_gpus > 1:
             sampler = DistributedSampler(self.train_dataset)
         else:
