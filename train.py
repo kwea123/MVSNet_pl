@@ -69,17 +69,17 @@ class MVSSystem(pl.LightningModule):
                                                 stack, self.global_step)
 
             abs_err = abs_error(depth_pred, depth_gt, mask).mean()
-            thr_2mm = error_threshold(depth_pred, depth_gt, mask, 2).mean()
-            thr_4mm = error_threshold(depth_pred, depth_gt, mask, 4).mean()
-            thr_8mm = error_threshold(depth_pred, depth_gt, mask, 8).mean()
+            acc_1mm = acc_threshold(depth_pred, depth_gt, mask, 1).mean()
+            acc_2mm = acc_threshold(depth_pred, depth_gt, mask, 2).mean()
+            acc_4mm = acc_threshold(depth_pred, depth_gt, mask, 4).mean()
 
         return {'loss': loss,
                 'progress_bar': {'train_abs_err': abs_err},
                 'log': {'train/loss': loss,
                         'train/abs_err': abs_err,
-                        'train/thr_2mm': thr_2mm,
-                        'train/thr_4mm': thr_4mm,
-                        'train/thr_8mm': thr_8mm,
+                        'train/acc_1mm': acc_1mm,
+                        'train/acc_2mm': acc_2mm,
+                        'train/acc_4mm': acc_4mm,
                         'lr': get_learning_rate(self.optimizer)}
                }
 
@@ -99,31 +99,31 @@ class MVSSystem(pl.LightningModule):
                                                 stack, self.global_step)
 
             abs_err = abs_error(depth_pred, depth_gt, mask)
-            thr_2mm = error_threshold(depth_pred, depth_gt, mask, 2)
-            thr_4mm = error_threshold(depth_pred, depth_gt, mask, 4)
-            thr_8mm = error_threshold(depth_pred, depth_gt, mask, 8)
+            acc_1mm = acc_threshold(depth_pred, depth_gt, mask, 1)
+            acc_2mm = acc_threshold(depth_pred, depth_gt, mask, 2)
+            acc_4mm = acc_threshold(depth_pred, depth_gt, mask, 4)
 
         return {'val_loss': loss,
                 'val_abs_err': abs_err,
-                'val_thr_2mm': thr_2mm,
-                'val_thr_4mm': thr_4mm,
-                'val_thr_8mm': thr_8mm,
+                'val_acc_1mm': acc_1mm,
+                'val_acc_2mm': acc_2mm,
+                'val_acc_4mm': acc_4mm,
                 }
 
     def validation_end(self, outputs):
         mean_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
         mean_abs_err = torch.cat([x['val_abs_err'] for x in outputs]).mean()
-        mean_thr_2mm = torch.cat([x['val_thr_2mm'] for x in outputs]).mean()
-        mean_thr_4mm = torch.cat([x['val_thr_4mm'] for x in outputs]).mean()
-        mean_thr_8mm = torch.cat([x['val_thr_8mm'] for x in outputs]).mean()
+        mean_acc_1mm = torch.cat([x['val_acc_1mm'] for x in outputs]).mean()
+        mean_acc_2mm = torch.cat([x['val_acc_2mm'] for x in outputs]).mean()
+        mean_acc_4mm = torch.cat([x['val_acc_4mm'] for x in outputs]).mean()
 
         return {'progress_bar': {'val_loss': mean_loss,
                                  'val_abs_err': mean_abs_err},
                 'log': {'val/loss': mean_loss,
                         'val/abs_err': mean_abs_err,
-                        'val/thr_2mm': mean_thr_2mm,
-                        'val/thr_4mm': mean_thr_4mm,
-                        'val/thr_8mm': mean_thr_8mm,
+                        'val/acc_1mm': mean_acc_1mm,
+                        'val/acc_2mm': mean_acc_2mm,
+                        'val/acc_4mm': mean_acc_4mm,
                         }
                }
 
