@@ -1,15 +1,14 @@
 import torch
 from torch import nn
 
-class L1Loss(nn.Module):
+class SL1Loss(nn.Module):
     def __init__(self, ohem=False, topk=0.6):
-        super(L1Loss, self).__init__()
+        super(SL1Loss, self).__init__()
         self.ohem = ohem
         self.topk = topk
-        self.loss = nn.L1Loss(reduction='none')
+        self.loss = nn.SmoothL1Loss(reduction='none')
 
     def forward(self, inputs, targets, mask):
-        # print(inputs[mask], targets[mask]) # to check amp work or not
         loss = self.loss(inputs[mask], targets[mask])
 
         if self.ohem:
@@ -19,4 +18,4 @@ class L1Loss(nn.Module):
 
         return torch.mean(loss)
 
-loss_dict = {'l1': L1Loss}
+loss_dict = {'sl1': SL1Loss}

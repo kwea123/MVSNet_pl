@@ -12,8 +12,8 @@ def get_opts():
                         help='number of depths of cost volume')
     parser.add_argument('--interval_scale', type=float, default=1.06,
                         help='depth interval scale between each depth step (2.5mm)')
-    parser.add_argument('--loss_type', type=str, default='l1',
-                        choices=['l1'],
+    parser.add_argument('--loss_type', type=str, default='sl1',
+                        choices=['sl1'],
                         help='loss to use')
 
     parser.add_argument('--batch_size', type=int, default=1,
@@ -58,8 +58,6 @@ def get_opts():
     parser.add_argument('--poly_exp', type=float, default=0.9,
                         help='exponent for polynomial learning rate decay')
     ###########################
-    parser.add_argument('--gradient_clip_val', type=float, default=0,
-                        help='clip gradient above this value, default is no clipping')
 
     parser.add_argument('--use_amp', default=False, action="store_true",
                         help='use mixed precision training')

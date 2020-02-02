@@ -32,7 +32,6 @@ class MVSSystem(pl.LightningModule):
         super(MVSSystem, self).__init__()
 
         self.hparams = hparams
-        self.t = 0
         # # to unnormalize image for visualization
         # self.unpreprocess = T.Normalize(mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225], 
         #                                 std=[1/0.229, 1/0.224, 1/0.225])
@@ -66,7 +65,7 @@ class MVSSystem(pl.LightningModule):
                 prob = visualize_prob(photometric_confidence[0])
                 stack = torch.stack([img_, depth_gt_, depth_pred_, prob]) # (4, 3, H, W)
                 self.logger.experiment.add_images('train/image_GT_pred_prob',
-                                                stack, self.global_step)
+                                                  stack, self.global_step)
 
             abs_err = abs_error(depth_pred, depth_gt, mask).mean()
             acc_1mm = acc_threshold(depth_pred, depth_gt, mask, 1).mean()
@@ -96,7 +95,7 @@ class MVSSystem(pl.LightningModule):
                 prob = visualize_prob(photometric_confidence[0])
                 stack = torch.stack([img_, depth_gt_, depth_pred_, prob]) # (4, 3, H, W)
                 self.logger.experiment.add_images('val/image_GT_pred_prob',
-                                                stack, self.global_step)
+                                                  stack, self.global_step)
 
             abs_err = abs_error(depth_pred, depth_gt, mask)
             acc_1mm = acc_threshold(depth_pred, depth_gt, mask, 1)
@@ -138,7 +137,7 @@ class MVSSystem(pl.LightningModule):
 
         # if num gpu is 1, print model structure and number of params
         if self.hparams.num_gpus == 1:
-            print(self.model)
+            # print(self.model)
             print('number of parameters : %.2f M' % 
                   (sum(p.numel() for p in self.model.parameters() if p.requires_grad) / 1e6))
         
@@ -201,7 +200,7 @@ if __name__ == '__main__':
                       weights_summary=None,
                       gpus=hparams.num_gpus,
                       distributed_backend='ddp' if hparams.num_gpus>1 else None,
-                      nb_sanity_val_steps=0 if hparams.num_gpus>1 else 5,
+                      num_sanity_val_steps=0 if hparams.num_gpus>1 else 5,
                       use_amp=hparams.use_amp,
                       amp_level='O1')
 

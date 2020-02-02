@@ -15,9 +15,9 @@ def visualize_depth(depth, cmap=cv2.COLORMAP_JET):
 
 def visualize_prob(prob, cmap=cv2.COLORMAP_BONE):
     """
-    prob: (H, W)
+    prob: (H, W) 0~1
     """
-    x = prob.cpu().numpy().astype(np.uint8)
+    x = (255*prob).cpu().numpy().astype(np.uint8)
     x_ = Image.fromarray(cv2.applyColorMap(x, cmap))
     x_ = T.ToTensor()(x_) # (3, H, W)
     return x_

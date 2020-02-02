@@ -67,8 +67,9 @@ def homo_warp(src_feat, src_proj, ref_proj_inv, depth_values):
     ref_grid_d = ref_grid.unsqueeze(2) * depth_values.view(B, 1, D, 1) # (B, 3, D, H*W)
     ref_grid_d = ref_grid_d.view(B, 3, D*H*W)
     src_grid_d = R @ ref_grid_d + T # (B, 3, D*H*W)
-    del ref_grid_d, ref_grid # release (GPU) memory
+    del ref_grid_d, ref_grid, transform, R, T # release (GPU) memory
     src_grid = src_grid_d[:, :2] / src_grid_d[:, -1:] # divide by depth (B, 2, D*H*W)
+    del src_grid_d
     src_grid[:, 0] = src_grid[:, 0]/((W - 1) / 2) - 1 # scale to -1~1
     src_grid[:, 1] = src_grid[:, 1]/((H - 1) / 2) - 1 # scale to -1~1
     src_grid = src_grid.permute(0, 2, 1) # (B, D*H*W, 2)

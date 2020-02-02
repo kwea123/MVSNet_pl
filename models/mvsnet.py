@@ -59,8 +59,11 @@ class CostRegNet(nn.Module):
         conv4 = self.conv4(self.conv3(conv2))
         x = self.conv6(self.conv5(conv4))
         x = conv4 + self.conv7(x)
+        del conv4
         x = conv2 + self.conv9(x)
+        del conv2
         x = conv0 + self.conv11(x)
+        del conv0
         x = self.prob(x)
         return x
 
@@ -95,11 +98,12 @@ class MVSNet(nn.Module):
         # in: images; out: 32-channel feature maps
         imgs = imgs.reshape(B*V, 3, H, W)
         feats = self.feature(imgs) # (B*V, F, h, w)
+        del imgs
         feats = feats.reshape(B, V, *feats.shape[1:]) # (B, V, F, h, w)
         ref_feats, src_feats = feats[:, 0], feats[:, 1:]
         ref_proj, src_projs = proj_mats[:, 0], proj_mats[:, 1:]
-        src_feats = torch.unbind(src_feats, 1) # (V-1, B, F, h, w)
-        src_projs = torch.unbind(src_projs, 1) # (V-1, B, 4, 4)
+        src_feats = src_feats.permute(1, 0, 2, 3, 4) # (V-1, B, F, h, w)
+        src_projs = src_projs.permute(1, 0, 2, 3) # (V-1, B, 4, 4)
 
         # step 2. differentiable homograph, build cost volume
         ref_volume = ref_feats.unsqueeze(2).repeat(1, 1, D, 1, 1) # (B, F, D, h, w)
@@ -113,16 +117,16 @@ class MVSNet(nn.Module):
             volume_sq_sum = volume_sq_sum + warped_volume ** 2
             del warped_volume
         # aggregate multiple feature volumes by variance
-        volume_variance = volume_sq_sum/V - (volume_sum/V).pow_(2)
-
+        volume_variance = volume_sq_sum.div_(V).sub_(volume_sum.div_(V).pow_(2))
+        
         # step 3. cost volume regularization
         cost_reg = self.cost_regularization(volume_variance)
         cost_reg = cost_reg.squeeze(1)
-        prob_volume = F.softmax(cost_reg, dim=1)
-        depth = depth_regression(prob_volume, depth_values=depth_values)
+        prob_volume = F.softmax(cost_reg, 1)
+        depth = depth_regression(prob_volume, depth_values)
 
         # this part still not understood
-        with torch.no_grad(): 
+        with torch.no_grad():
             # photometric confidence
             prob_volume_sum4 = 4 * F.avg_pool3d(F.pad(prob_volume.unsqueeze(1), pad=(0, 0, 0, 0, 1, 2)), (4, 1, 1), stride=1, padding=0).squeeze(1)
             depth_index = depth_regression(prob_volume, depth_values=torch.arange(D, device=prob_volume.device, dtype=torch.float)).long()
