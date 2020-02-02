@@ -7,7 +7,7 @@ import torch
 from torchvision import transforms as T
 
 class DTUDataset(Dataset):
-    def __init__(self, root_dir, split, n_views, n_depths=256, interval_scale=1.06):
+    def __init__(self, root_dir, split, n_views=3, n_depths=256, interval_scale=1.06):
         self.root_dir = root_dir
         self.split = split
         assert self.split in ['train', 'val'], \
@@ -103,9 +103,10 @@ class DTUDataset(Dataset):
             if i == 0:  # reference view
                 depth_values = torch.arange(depth_min,
                                             depth_interval*self.n_depths+depth_min,
-                                            depth_interval)
+                                            depth_interval,
+                                            dtype=torch.float32)
                 mask = Image.open(mask_filename)
-                mask = torch.from_numpy(np.array(mask)).long()
+                mask = torch.from_numpy(np.array(mask)).bool()
                 depth = torch.FloatTensor(self.read_depth(depth_filename))
                 proj_mats += [torch.inverse(proj_mat)]
             else:
