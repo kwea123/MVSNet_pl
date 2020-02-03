@@ -120,17 +120,23 @@ class MVSNet(nn.Module):
         volume_variance = volume_sq_sum.div_(V).sub_(volume_sum.div_(V).pow_(2))
         
         # step 3. cost volume regularization
-        cost_reg = self.cost_regularization(volume_variance)
-        cost_reg = cost_reg.squeeze(1)
-        prob_volume = F.softmax(cost_reg, 1)
+        cost_reg = self.cost_regularization(volume_variance).squeeze(1)
+        prob_volume = F.softmax(cost_reg, 1) # (B, D, h, w)
         depth = depth_regression(prob_volume, depth_values)
-
-        # this part still not understood
+        
         with torch.no_grad():
-            # photometric confidence
-            prob_volume_sum4 = 4 * F.avg_pool3d(F.pad(prob_volume.unsqueeze(1), pad=(0, 0, 0, 0, 1, 2)), (4, 1, 1), stride=1, padding=0).squeeze(1)
-            depth_index = depth_regression(prob_volume, torch.arange(D, device=prob_volume.device, dtype=torch.float)).long()
-            photometric_confidence = torch.gather(prob_volume_sum4, 1, depth_index.unsqueeze(1)).squeeze(1)
+            # sum probability of 4 consecutive depth indices
+            prob_volume_sum4 = 4 * F.avg_pool3d(F.pad(prob_volume.unsqueeze(1),
+                                                      pad=(0, 0, 0, 0, 1, 2)),
+                                                (4, 1, 1), stride=1).squeeze(1) # (B, D, h, w)
+            # find the (rounded) index that is the final prediction
+            depth_index = depth_regression(prob_volume,
+                                           torch.arange(D,
+                                                        device=prob_volume.device,
+                                                        dtype=prob_volume.dtype)
+                                          ).long() # (B, h, w)
+            # the confidence is the 4-sum probability at this index
+            confidence = torch.gather(prob_volume_sum4, 1, 
+                                      depth_index.unsqueeze(1)).squeeze(1) # (B, h, w)
 
-        # step 4. depth map refinement (no refinement for now)
-        return depth, photometric_confidence
+        return depth, confidence

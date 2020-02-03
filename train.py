@@ -44,7 +44,7 @@ class MVSSystem(pl.LightningModule):
 
     def training_step(self, batch, batch_nb):
         imgs, proj_mats, depth_gt, depth_values, mask = batch
-        depth_pred, photometric_confidence = self.forward(imgs, proj_mats, depth_values)
+        depth_pred, confidence = self.forward(imgs, proj_mats, depth_values)
         loss = self.loss(depth_pred, depth_gt, mask)
         
         with torch.no_grad():
@@ -52,7 +52,7 @@ class MVSSystem(pl.LightningModule):
                 img_ = self.unpreprocess(imgs[0,0,:,::4,::4]).cpu() # batch 0, ref image, 1/4 scale
                 depth_gt_ = visualize_depth(depth_gt[0])
                 depth_pred_ = visualize_depth(depth_pred[0]*mask[0])
-                prob = visualize_prob(photometric_confidence[0]*mask[0])
+                prob = visualize_prob(confidence[0]*mask[0])
                 stack = torch.stack([img_, depth_gt_, depth_pred_, prob]) # (4, 3, H, W)
                 self.logger.experiment.add_images('train/image_GT_pred_prob',
                                                   stack, self.global_step)
@@ -74,7 +74,7 @@ class MVSSystem(pl.LightningModule):
 
     def validation_step(self, batch, batch_nb):
         imgs, proj_mats, depth_gt, depth_values, mask = batch
-        depth_pred, photometric_confidence = self.forward(imgs, proj_mats, depth_values)
+        depth_pred, confidence = self.forward(imgs, proj_mats, depth_values)
         loss = self.loss(depth_pred, depth_gt, mask)
 
         with torch.no_grad():
@@ -82,7 +82,7 @@ class MVSSystem(pl.LightningModule):
                 img_ = self.unpreprocess(imgs[0,0,:,::4,::4]).cpu() # batch 0, ref image, 1/4 scale
                 depth_gt_ = visualize_depth(depth_gt[0])
                 depth_pred_ = visualize_depth(depth_pred[0]*mask[0])
-                prob = visualize_prob(photometric_confidence[0]*mask[0])
+                prob = visualize_prob(confidence[0]*mask[0])
                 stack = torch.stack([img_, depth_gt_, depth_pred_, prob]) # (4, 3, H, W)
                 self.logger.experiment.add_images('val/image_GT_pred_prob',
                                                   stack, self.global_step)
