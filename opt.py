@@ -60,7 +60,7 @@ def get_opts():
     ###########################
 
     parser.add_argument('--use_amp', default=False, action="store_true",
-                        help='use mixed precision training')
+                        help='use mixed precision training (NOT SUPPORTED!)')
 
     parser.add_argument('--exp_name', type=str, default='exp',
                         help='experiment name')

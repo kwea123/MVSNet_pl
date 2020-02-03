@@ -112,7 +112,7 @@ class DTUDataset(Dataset):
                                             depth_interval,
                                             dtype=torch.float32)
                 mask = Image.open(mask_filename)
-                mask = torch.from_numpy(np.array(mask)).bool()
+                mask = torch.BoolTensor(np.array(mask))
                 depth = torch.FloatTensor(self.read_depth(depth_filename))
                 proj_mats += [torch.inverse(proj_mat)]
             else:

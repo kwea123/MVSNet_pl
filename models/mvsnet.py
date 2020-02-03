@@ -118,6 +118,7 @@ class MVSNet(nn.Module):
             del warped_volume
         # aggregate multiple feature volumes by variance
         volume_variance = volume_sq_sum.div_(V).sub_(volume_sum.div_(V).pow_(2))
+        del volume_sq_sum, volume_sum
         
         # step 3. cost volume regularization
         cost_reg = self.cost_regularization(volume_variance).squeeze(1)
