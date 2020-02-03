@@ -38,5 +38,8 @@ Note that the model cosumes huge GPU memory, so the batch size is generally smal
 
 ## Example training log
 
+![log1](assets/log1.png)
+![log2](assets/log2.png)
+
 # Testing
 The repo is only for training purpose for now. Please refer to the other repositories mentioned at the beginning if you want to evaluate the model.
