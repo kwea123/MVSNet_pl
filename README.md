@@ -34,7 +34,7 @@ python train.py \
   --n_depths 192 --interval_scale 1.06 \
   --optimizer adam --lr 1e-3 --lr_scheduler cosine
 ```
-Note that the model cosumes huge GPU memory, so the batch size is generally small. For reference, the above command requires 5901MB of GPU memory.
+Note that the model consumes huge GPU memory, so the batch size is generally small. For reference, the above command requires 5901MB of GPU memory.
 
 ## Example training log
 
