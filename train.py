@@ -10,7 +10,7 @@ from datasets.dtu import DTUDataset
 from models.mvsnet import MVSNet
 from inplace_abn import InPlaceABN, InPlaceABNSync
 
-# from torchvision import transforms as T
+from torchvision import transforms as T
 
 # optimizer, scheduler, visualization
 from utils import *
@@ -33,9 +33,9 @@ class MVSSystem(pl.LightningModule):
     def __init__(self, hparams):
         super(MVSSystem, self).__init__()
         self.hparams = hparams
-        # # to unnormalize image for visualization
-        # self.unpreprocess = T.Normalize(mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225], 
-        #                                 std=[1/0.229, 1/0.224, 1/0.225])
+        # to unnormalize image for visualization
+        self.unpreprocess = T.Normalize(mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225], 
+                                        std=[1/0.229, 1/0.224, 1/0.225])
 
         self.loss = loss_dict[hparams.loss_type](ohem=True, topk=0.6)
 
@@ -49,7 +49,7 @@ class MVSSystem(pl.LightningModule):
         
         with torch.no_grad():
             if batch_nb == 0:
-                img_ = imgs[0, 0, :, ::4, ::4].cpu() # batch 0, ref image, 1/4 scale
+                img_ = self.unpreprocess(imgs[0,0,:,::4,::4]).cpu() # batch 0, ref image, 1/4 scale
                 depth_gt_ = visualize_depth(depth_gt[0])
                 depth_pred_ = visualize_depth(depth_pred[0]*mask[0])
                 prob = visualize_prob(photometric_confidence[0]*mask[0])
@@ -79,7 +79,7 @@ class MVSSystem(pl.LightningModule):
 
         with torch.no_grad():
             if batch_nb == 0:
-                img_ = imgs[0, 0, :, ::4, ::4].cpu() # batch 0, ref image, 1/4 scale
+                img_ = self.unpreprocess(imgs[0,0,:,::4,::4]).cpu() # batch 0, ref image, 1/4 scale
                 depth_gt_ = visualize_depth(depth_gt[0])
                 depth_pred_ = visualize_depth(depth_pred[0]*mask[0])
                 prob = visualize_prob(photometric_confidence[0]*mask[0])
@@ -117,7 +117,6 @@ class MVSSystem(pl.LightningModule):
                }
 
     def configure_optimizers(self):
-        # configure batch normalization
         if self.hparams.use_syncbn and self.hparams.num_gpus>1:
             norm_act = InPlaceABNSync
         else:
