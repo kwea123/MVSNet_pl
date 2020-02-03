@@ -29,6 +29,7 @@ Download the preprocessed [DTU training data](https://drive.google.com/file/d/1e
 Run
 ```
 python train.py \
+  --root_dir $DTU_DIR \
   --num_epochs 6 --batch_size 1 \
   --n_depths 192 --interval_scale 1.06 \
   --optimizer adam --lr 1e-3 --lr_scheduler cosine
