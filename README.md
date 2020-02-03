@@ -39,6 +39,8 @@ python train.py \
 ```
 Note that the model consumes huge GPU memory, so the batch size is generally small. For reference, the above command requires 5901MB of GPU memory.
 
+See [opt.py](opt.py) for all configurations.
+
 ## Example training log
 
 ![log1](assets/log1.png)
