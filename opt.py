@@ -10,7 +10,7 @@ def get_opts():
                         help='number of views (including ref) to be used in training')
     parser.add_argument('--n_depths', type=int, default=256,
                         help='number of depths of cost volume')
-    parser.add_argument('--interval_scale', type=float, default=1.06,
+    parser.add_argument('--interval_scale', type=float, default=0.8,
                         help='depth interval scale between each depth step (2.5mm)')
     parser.add_argument('--loss_type', type=str, default='sl1',
                         choices=['sl1'],
