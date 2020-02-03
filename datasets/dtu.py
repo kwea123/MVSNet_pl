@@ -21,7 +21,7 @@ class DTUDataset(Dataset):
 
     def build_metas(self):
         self.metas = []
-        with open(os.path.join('datasets/lists/dtu', '%s.txt'%self.split)) as f:
+        with open(f'datasets/lists/dtu/{self.split}.txt') as f:
             scans = [line.rstrip() for line in f.readlines()]
 
         pair_file = "Cameras/pair.txt"
