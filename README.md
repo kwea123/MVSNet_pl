@@ -1,4 +1,4 @@
-# mvsnet_pl
+# MVSNet_pl
 Unofficial implementation of [MVSNet: Depth Inference for Unstructured Multi-view Stereo](https://arxiv.org/pdf/1804.02505.pdf) using [pytorch-lightning](https://github.com/PyTorchLightning/pytorch-lightning)
 
 # References & Credits
@@ -34,9 +34,12 @@ python train.py \
   --n_depths 192 --interval_scale 1.06 \
   --optimizer adam --lr 1e-3 --lr_scheduler cosine
 ```
-Note that the model cosumes huge GPU memory, so the batch size is generally small. For reference, the above command requires 5901MB of GPU memory.
+Note that the model consumes huge GPU memory, so the batch size is generally small. For reference, the above command requires 5901MB of GPU memory.
 
 ## Example training log
+
+![log1](assets/log1.png)
+![log2](assets/log2.png)
 
 # Testing
 The repo is only for training purpose for now. Please refer to the other repositories mentioned at the beginning if you want to evaluate the model.
