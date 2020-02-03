@@ -6,6 +6,9 @@ Official implementation: [MVSNet](https://github.com/YoYo000/MVSNet)
 
 A pytorch implementation: [MVSNet_pytorch](https://github.com/xy-guo/MVSNet_pytorch).
 This code is heavily borrowed from his implementation. Thank [xy-guo](https://github.com/xy-guo) for the effortful contribution!
+Two main difference w.r.t. his repo:
+1. `homo_warping` function is rewritten in a more concise and slightly faster way.
+2. Use [Inplace-ABN](https://github.com/mapillary/inplace_abn) in the model to reduce GPU memory consumption (about 10%).
 
 # Installation
 
