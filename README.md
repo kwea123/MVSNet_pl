@@ -1,4 +1,4 @@
-# mvsnet_pl
+# MVSNet_pl
 Unofficial implementation of [MVSNet: Depth Inference for Unstructured Multi-view Stereo](https://arxiv.org/pdf/1804.02505.pdf) using [pytorch-lightning](https://github.com/PyTorchLightning/pytorch-lightning)
 
 # References & Credits
