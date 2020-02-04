@@ -70,15 +70,15 @@ class DTUDataset(Dataset):
 
     def define_transforms(self):
         if self.split == 'train':
-            self.transform = T.Compose([T.ColorJitter(brightness=0.1,
-                                                      contrast=0.1,
-                                                      saturation=0.1),
-                                        T.ToTensor(),
+            self.transform = T.Compose([T.ToTensor(),
                                         T.Normalize(mean=[0.485, 0.456, 0.406], 
                                                     std=[0.229, 0.224, 0.225]),
                                        ])
         else:
-            self.transform = T.ToTensor()
+            self.transform = T.Compose([T.ToTensor(),
+                                        T.Normalize(mean=[0.485, 0.456, 0.406], 
+                                                    std=[0.229, 0.224, 0.225]),
+                                       ])
 
     def __len__(self):
         return len(self.metas)
