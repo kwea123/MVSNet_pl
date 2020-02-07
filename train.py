@@ -180,14 +180,14 @@ if __name__ == '__main__':
     hparams = get_opts()
     system = MVSSystem(hparams)
     checkpoint_callback = ModelCheckpoint(filepath=os.path.join('ckpts', 
-                                                   f'{hparams.exp_name}'),
+                                                   hparams.exp_name),
                                           monitor='val/loss',
                                           mode='min',
                                           save_top_k=1,)
 
     logger = TestTubeLogger(
         save_dir="logs",
-        name=f'{hparams.exp_name}',
+        name=hparams.exp_name,
         debug=False,
         create_git_tag=False
     )

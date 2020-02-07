@@ -67,20 +67,6 @@ class CostRegNet(nn.Module):
         x = self.prob(x)
         return x
 
-class RefineNet(nn.Module):
-    def __init__(self):
-        super(RefineNet, self).__init__()
-        self.conv1 = ConvBnReLU(4, 32)
-        self.conv2 = ConvBnReLU(32, 32)
-        self.conv3 = ConvBnReLU(32, 32)
-        self.res = ConvBnReLU(32, 1)
-
-    def forward(self, img, depth_init):
-        concat = torch.cat((img, depth_init), dim=1)
-        depth_residual = self.res(self.conv3(self.conv2(self.conv1(concat))))
-        depth_refined = depth_init + depth_residual
-        return depth_refined
-
 class MVSNet(nn.Module):
     def __init__(self, norm_act=InPlaceABN):
         super(MVSNet, self).__init__()
