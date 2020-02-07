@@ -46,5 +46,14 @@ See [opt.py](opt.py) for all configurations.
 ![log1](assets/log1.png)
 ![log2](assets/log2.png)
 
+## Some observations on training
+1. Larger `n_depths` theoretically gives better results, but requires larger GPU memory, so basically the `batch_size` can just be `1` or `2`. However at the meanwhile, larger `batch_size` is also indispensable. To get a good balance between `n_depths` and `batch_size`, I found that `n_depths 128 batch_size 2` performs **better** than `n_depths 192 batch_size 1` given a fixed GPU memory of 11GB. Of course to get even better results, you'll definitely want to scale up the `batch_size` by using more GPUs, and that is easy under pytorch-lightning's framework!
+2. Longer training epochs produces better results. The pretrained model I provide is trained for 16 epochs, and it performs better than the model trained for only 6 epochs as the paper did.
+3. Image color augmentation worsen the result, and normalization seems to have little to no effect.
+
 # Testing
+
+1. Download pretrained model from [release](https://github.com/kwea123/MVSNet_pl/releases).
+2. Use [test.ipynb](test.ipynb) for a simple depth inference for an image.
+
 The repo is only for training purpose for now. Please refer to the other repositories mentioned at the beginning if you want to evaluate the model.
