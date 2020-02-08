@@ -75,7 +75,7 @@ class MVSNet(nn.Module):
 
     def forward(self, imgs, proj_mats, depth_values):
         # imgs: (B, V, 3, H, W)
-        # proj_mats: (B, V, 3, 3)
+        # proj_mats: (B, V, 4, 4)
         # depth_values: (B, D)
         B, V, _, H, W = imgs.shape
         D = depth_values.shape[1]
