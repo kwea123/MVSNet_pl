@@ -1,6 +1,8 @@
 # MVSNet_pl
 Unofficial implementation of [MVSNet: Depth Inference for Unstructured Multi-view Stereo](https://arxiv.org/pdf/1804.02505.pdf) using [pytorch-lightning](https://github.com/PyTorchLightning/pytorch-lightning)
 
+**An improved version of MVSNet: [CasMVSNet](https://github.com/kwea123/CasMVSNet_pl) is available!**
+
 # References & Credits
 Official implementation: [MVSNet](https://github.com/YoYo000/MVSNet)
 
