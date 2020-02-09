@@ -74,10 +74,11 @@ class MVSSystem(pl.LightningModule):
 
     def validation_step(self, batch, batch_nb):
         imgs, proj_mats, depth_gt, depth_values, mask = batch
-        depth_pred, confidence = self.forward(imgs, proj_mats, depth_values)
-        loss = self.loss(depth_pred, depth_gt, mask)
 
         with torch.no_grad():
+            depth_pred, confidence = self.forward(imgs, proj_mats, depth_values)
+            loss = self.loss(depth_pred, depth_gt, mask)
+
             if batch_nb == 0:
                 img_ = self.unpreprocess(imgs[0,0,:,::4,::4]).cpu() # batch 0, ref image, 1/4 scale
                 depth_gt_ = visualize_depth(depth_gt[0])
