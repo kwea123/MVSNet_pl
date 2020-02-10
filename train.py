@@ -88,9 +88,6 @@ class MVSSystem(pl.LightningModule):
                 self.logger.experiment.add_images('val/image_GT_pred_prob',
                                                   stack, self.global_step)
 
-            depth_pred = depth_pred.cpu()
-            depth_gt = depth_gt.cpu()
-            mask = mask.cpu()
             abs_err = abs_error(depth_pred, depth_gt, mask)
             acc_1mm = acc_threshold(depth_pred, depth_gt, mask, 1)
             acc_2mm = acc_threshold(depth_pred, depth_gt, mask, 2)
