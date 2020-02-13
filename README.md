@@ -48,6 +48,14 @@ See [opt.py](opt.py) for all configurations.
 ![log1](assets/log1.png)
 ![log2](assets/log2.png)
 
+## Metrics
+The metrics are collected on the DTU val set.
+
+|       | abs_err | 1mm acc | 2mm acc | 4mm acc |
+| :---: |   :---: |  :---: | :---: | :---: |
+| Paper | N/A     | N/A    | N/A | N/A |
+| This repo | 6.374mm | 54.43% | 74.23% | 85.8% |
+
 ## Some observations on training
 1. Larger `n_depths` theoretically gives better results, but requires larger GPU memory, so basically the `batch_size` can just be `1` or `2`. However at the meanwhile, larger `batch_size` is also indispensable. To get a good balance between `n_depths` and `batch_size`, I found that `n_depths 128 batch_size 2` performs **better** than `n_depths 192 batch_size 1` given a fixed GPU memory of 11GB. Of course to get even better results, you'll definitely want to scale up the `batch_size` by using more GPUs, and that is easy under pytorch-lightning's framework!
 2. Longer training epochs produces better results. The pretrained model I provide is trained for 16 epochs, and it performs better than the model trained for only 6 epochs as the paper did.
