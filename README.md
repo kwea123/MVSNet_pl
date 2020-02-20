@@ -21,7 +21,7 @@ Two main difference w.r.t. his repo:
 
 ## Software
 
-* Python>=3.6 (installation via [anaconda](https://www.anaconda.com/distribution/) is recommended)
+* Python>=3.6.1 (installation via [anaconda](https://www.anaconda.com/distribution/) is recommended, use `conda create -n mvsnet_pl python=3.6` to create a conda environment and activate it by `conda activate mvsnet_pl`)
 * Python libraries
     * Install core requirements by `pip install -r requirements.txt`
     * Install [Inplace-ABN](https://github.com/mapillary/inplace_abn) by `pip install git+https://github.com/mapillary/inplace_abn.git@v1.0.11`
