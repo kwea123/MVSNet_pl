@@ -47,6 +47,7 @@ See [opt.py](opt.py) for all configurations.
 
 ![log1](assets/log1.png)
 ![log2](assets/log2.png)
+![log3](assets/log3.png)
 
 ## Metrics
 The metrics are collected on the DTU val set.
