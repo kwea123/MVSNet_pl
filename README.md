@@ -54,8 +54,10 @@ The metrics are collected on the DTU val set.
 
 |       | abs_err | 1mm acc | 2mm acc | 4mm acc |
 | :---: |   :---: |  :---: | :---: | :---: |
-| Paper | N/A     | N/A    | N/A | N/A |
+| Paper | 7.25mm*     | N/A    | N/A | N/A |
 | This repo | 6.374mm | 54.43% | 74.23% | 85.8% |
+
+*From [P-MVSNet](http://openaccess.thecvf.com/content_ICCV_2019/papers/Luo_P-MVSNet_Learning_Patch-Wise_Matching_Confidence_Aggregation_for_Multi-View_Stereo_ICCV_2019_paper.pdf) Table 2.
 
 ## Some observations on training
 1. Larger `n_depths` theoretically gives better results, but requires larger GPU memory, so basically the `batch_size` can just be `1` or `2`. However at the meanwhile, larger `batch_size` is also indispensable. To get a good balance between `n_depths` and `batch_size`, I found that `n_depths 128 batch_size 2` performs **better** than `n_depths 192 batch_size 1` given a fixed GPU memory of 11GB. Of course to get even better results, you'll definitely want to scale up the `batch_size` by using more GPUs, and that is easy under pytorch-lightning's framework!
