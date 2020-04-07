@@ -41,6 +41,8 @@ python train.py \
 ```
 Note that the model consumes huge GPU memory, so the batch size is generally small. For reference, the above command requires 5901MB of GPU memory.
 
+**IMPORTANT** : the combination of `--n_depths` and `--interval_scale` is important: you need to make sure `2.5 x n_depths x interval_scale` is roughly equal to `510`. The reason is that the actual depth ranges from 425 to 935mm, which is 510mm wide. Therefore, you need to make sure all the depth can be covered by the depth planes you set. Some common combinations are: `--n_depths 256 --interval_scale 0.8`, `--n_depths 192 --interval_scale 1.06` and `--n_depths 128 --interval_scale 1.6`.
+
 See [opt.py](opt.py) for all configurations.
 
 ## Example training log
